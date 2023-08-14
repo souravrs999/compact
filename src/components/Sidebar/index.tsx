@@ -1,60 +1,107 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { ChevronRight, ArrowLeftToLine } from "lucide-react";
 import React, { useState } from "react";
+import { Icons } from "../icons";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import ProfileMenu from "../SidebarProfileMenu";
+import { menuList } from "@/config";
+import { useDispatch, useSelector } from "@/lib/redux";
+import { cn } from "@/lib/utils";
+import { applicationSlice } from "@/lib/redux/slices/applicationSlice";
+import SidebarMenuItem from "../SidebarMenu";
+import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 function Sidebar() {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const { sidebar } = useSelector((state) => state.application);
+  const [activeClient, setActiveClient] = useState<string>("nix");
+  const dispatch = useDispatch();
 
   return (
     <div
       className={cn(
-        "w-16 border-r-[1px] border-gray-300 h-full transition-all duration-100 ease-in-out relative",
+        "flex flex-col w-0 top-0 left-0 bg-background h-full border-r text-foreground overflow-hidden transition-all duration-100 ease-in-out shadow-lg",
         {
-          "w-64": expanded,
+          "w-64": sidebar.open,
         }
       )}
     >
-      <div className="max-h-full p-3 overflow-hidden">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-none items-center">
-            <div className="relative">
-              <Avatar className="rounded-lg">
-                <AvatarImage src="/assets/images/avatar-cover.png" />
-                <AvatarFallback className="rounded-lg bg-purple-700 text-white">
-                  HP
-                </AvatarFallback>
-              </Avatar>
-              <span className="absolute w-2 h-2 bg-green-500 ring-2 ring-white rounded-full bottom-0 right-0" />
-            </div>
-            <div className="flex flex-col ml-4">
-              <p className="text-sm font-bold text-gray-800">Hyperion</p>
-              <p className="text-[11px] font-light text-gray-500">
-                Sandro&apos;s Team
+      <div className="flex items-center p-2 h-16 border-b justify-between">
+        <Image
+          width={120}
+          height={50}
+          src="/assets/images/logo.svg"
+          alt="logo"
+        />
+        <span
+          onClick={() =>
+            dispatch(applicationSlice.actions.toggleSidebar(false))
+          }
+          className="p-1 border rounded hover:bg-muted"
+        >
+          <Icons.chevronLeft className="w-4 h-4" />
+        </span>
+      </div>
+      <div className="overflow-y-auto overflow-x-hidden flex-grow">
+        <ul className="flex flex-col py-4 space-y-1">
+          {menuList?.map((menu) => (
+            <SidebarMenuItem key={menu.id} menu={menu} />
+          ))}
+        </ul>
+      </div>
+      <div className="flex items-center justify-between h-16 p-2 border-t">
+        <Select
+          onValueChange={(client) => setActiveClient(client)}
+          defaultValue={activeClient}
+        >
+          <SelectTrigger className="focus:ring-0 border-none rounded-none">
+            <div className="flex items-center justify-between">
+              <Image
+                width={30}
+                height={30}
+                src={`/assets/images/${activeClient}.svg`}
+                alt="client"
+              />
+              <p className="text-base font-bold ml-5 text-foreground tracking-wider capitalize">
+                {activeClient}
               </p>
             </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="nix">
+              <p className="">Nix</p>
+            </SelectItem>
+            <SelectItem value="craddle">
+              <p className="">Craddle</p>
+            </SelectItem>
+            <SelectItem value="nike">
+              <p className="">Nike</p>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="h-16 flex items-center justify-between p-2 border-t">
+        <div className="flex items-center">
+          <div className="relative">
+            <Avatar className="flex-none w-10 h-10">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@user" />
+              <AvatarFallback>JS</AvatarFallback>
+            </Avatar>
+            <span className="absolute w-2 h-2 bg-green-500 rounded-full top-0 right-0 ring-2 ring-background" />
           </div>
-          <div
-            onClick={() => setExpanded(false)}
-            className="grid place-items-center border w-8 h-8 rounded-md cursor-pointer"
-          >
-            <ArrowLeftToLine className="w-4 h-4 text-gray-500" />
+          <div className="flex flex-shrink-0 flex-col ml-3">
+            <p className="text-sm font-bold">Jane Smith</p>
+            <p className="text-xs text-gray-500">Therapist</p>
           </div>
         </div>
+        <ProfileMenu />
       </div>
-      <span
-        onClick={() => setExpanded(true)}
-        className={cn(
-          "p-1 bg-white border border-gray-300 rounded-full absolute -right-3 top-1/2 cursor-pointer",
-          {
-            hidden: expanded,
-          }
-        )}
-      >
-        <ChevronRight className="w-3 h-3 text-gray-500" />
-      </span>
     </div>
   );
 }

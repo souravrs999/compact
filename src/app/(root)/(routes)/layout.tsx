@@ -1,4 +1,5 @@
 import Sidebar from "@/components/Sidebar";
+import Topbar from "@/components/Topbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,9 +13,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-full">
+    <div className="flex h-screen">
       <Sidebar />
-      {children}
+      <div className="flex flex-col flex-1">
+        <Topbar />
+        <div className="flex-1 overflow-y-auto bg-muted p-1">{children}</div>
+      </div>
     </div>
   );
 }
