@@ -15,7 +15,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "../ui/select";
 
 function Sidebar() {
@@ -57,7 +56,7 @@ function Sidebar() {
       </div>
       <div className="flex items-center justify-between h-16 p-2 border-t">
         <Select
-          onValueChange={(client) => setActiveClient(client)}
+          onValueChange={(client: string) => setActiveClient(client)}
           defaultValue={activeClient}
         >
           <SelectTrigger className="focus:ring-0 border-none rounded-none">
