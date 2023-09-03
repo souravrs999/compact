@@ -238,9 +238,9 @@ function UserProfile() {
                 </div>
                 <div className="flex gap-2 items-center ml-2">
                   <Button variant="outline" className="w-36">
-                    Discard Changes
+                    Discard
                   </Button>
-                  <Button className="w-32">Save Changes</Button>
+                  <Button className="w-32">Save</Button>
                 </div>
               </form>
             </Form>

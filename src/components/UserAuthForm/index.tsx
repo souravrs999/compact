@@ -10,24 +10,20 @@ import FormInput from "../FormInput";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
 import { Icons } from "../icons";
-
-const formSchema = z.object({
-  email: z.string().email({ message: "Please provide a valid email" }),
-  password: z.string(),
-});
+import { loginSchema } from "@/lib/validations/auth";
 
 function UserAuthForm() {
   const [passView, setPassView] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof loginSchema>) {
     console.log(values);
   }
 
@@ -42,6 +38,7 @@ function UserAuthForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormInput
           form={form}
+          id="login-email"
           name="email"
           label="Email"
           type="email"
@@ -52,6 +49,7 @@ function UserAuthForm() {
         />
         <FormInput
           form={form}
+          id="login-password"
           name="password"
           label="Password"
           placeholder=""

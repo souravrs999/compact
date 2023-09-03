@@ -1,4 +1,5 @@
 import UserAuthForm from "@/components/UserAuthForm";
+import UserSocialAuth from "@/components/UserSocialAuth";
 import { Icons } from "@/components/icons";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
@@ -38,16 +39,7 @@ function Login() {
                 or
               </span>
             </div>
-            <div className="flex items-center justify-between gap-2">
-              <Button variant="outline" className="w-full">
-                <Icons.google className="w-4 h-4 mr-2" />
-                Google
-              </Button>
-              <Button variant="outline" className="w-full">
-                <Icons.facebook className="w-4 h-4 mr-2" />
-                Facebook
-              </Button>
-            </div>
+            <UserSocialAuth />
             <div className="w-full grid place-items-center">
               <span className="text-sm">
                 Don&apos;t have an account?{" "}

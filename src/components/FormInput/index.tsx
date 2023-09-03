@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
 type InputProps = {
+  id: string;
   form: UseFormReturn<any>;
   name: string;
   label: string;
@@ -17,6 +18,7 @@ type InputProps = {
 
 function FormInput(props: InputProps) {
   const {
+    id,
     form,
     name,
     label,
@@ -32,7 +34,7 @@ function FormInput(props: InputProps) {
       name={name}
       render={({ field }) => (
         <FormItem className={cn("relative", className)}>
-          <FormLabel className="text-xs text-muted-foreground">
+          <FormLabel htmlFor={id} className="text-xs text-muted-foreground">
             {label}
           </FormLabel>
           {startAdornment && (
@@ -42,6 +44,7 @@ function FormInput(props: InputProps) {
           )}
           <FormControl>
             <Input
+              id={id}
               {...rest}
               {...field}
               className={cn(
