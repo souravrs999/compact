@@ -1,8 +1,6 @@
 import UserAuthForm from "@/components/UserAuthForm";
 import UserSocialAuth from "@/components/UserSocialAuth";
-import { Icons } from "@/components/icons";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";

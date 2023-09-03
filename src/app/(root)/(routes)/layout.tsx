@@ -1,5 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function RootLayout({
       <Sidebar />
       <div className="flex flex-col flex-1">
         <Topbar />
-        <div className="flex-1 overflow-y-auto bg-muted p-1">{children}</div>
+        <ScrollArea className="flex-1 bg-muted p-1">{children}</ScrollArea>
       </div>
     </div>
   );

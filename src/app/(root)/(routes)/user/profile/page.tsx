@@ -5,54 +5,33 @@ import { LucideIcon } from "lucide-react";
 import React, { useState } from "react";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { generateFallbackString } from "@/utils/strings";
+import { userProfileSchema } from "@/lib/validations/user";
+import FormInput from "@/components/FormInput";
 
-const userProfileSchema = z.object({
-  username: z
-    .string()
-    .min(2, { message: "Username must be atleast 2 characters" }),
-  firstName: z
-    .string()
-    .min(2, { message: "First name must be atleast 2 characters" }),
-  lastName: z
-    .string()
-    .min(2, { message: "Last name must be atleast 2 characters" }),
-  company: z
-    .string()
-    .min(2, { message: "Company must be atleast 2 characters" }),
-  designation: z.string().optional(),
-  address: z
-    .string()
-    .min(5, { message: "Address must be atleast 5 characters" }),
-  city: z.string().min(5, { message: "City must be atleast 5 characters" }),
-  country: z
-    .string()
-    .min(5, { message: "Country must be atleast 5 characters" }),
-  state: z.string().min(5, { message: "State must be atleast 5 characters" }),
-  zip: z.string().min(5, { message: "State must be atleast 5 characters" }),
-});
+type CustomTags = {
+  activeTab: string;
+  value: string;
+  label: string;
+  description: string;
+  Icon: LucideIcon;
+};
 
-function customTagsTrigger(
-  activeTab: string,
-  value: string,
-  label: string,
-  description: string,
-  Icon: LucideIcon
-) {
+const CustomTagsTrigger = ({
+  activeTab,
+  value,
+  label,
+  description,
+  Icon,
+}: CustomTags) => {
   return (
     <TabsTrigger
       value={value}
@@ -76,36 +55,10 @@ function customTagsTrigger(
       </div>
     </TabsTrigger>
   );
-}
-
-function customFormField(
-  form: UseFormReturn<any>,
-  name: string,
-  label: string
-) {
-  return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-xs text-muted-foreground">
-            {label}
-          </FormLabel>
-          <FormControl>
-            <Input
-              placeholder="Last Name"
-              {...field}
-              className="h-8 focus-visible:ring-offset-0 font-semibold rounded"
-            />
-          </FormControl>
-        </FormItem>
-      )}
-    />
-  );
-}
+};
 
 function UserProfile() {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState<string>("account");
   const [tabCollapsed, setTabCollapsed] = useState<boolean>(false);
 
@@ -148,20 +101,20 @@ function UserProfile() {
             }
           )}
         >
-          {customTagsTrigger(
-            activeTab,
-            "account",
-            "Account",
-            "Personal information",
-            Icons.user
-          )}
-          {customTagsTrigger(
-            activeTab,
-            "settings",
-            "Settings",
-            "Change Password, 2FA",
-            Icons.settings
-          )}
+          <CustomTagsTrigger
+            activeTab={activeTab}
+            value="account"
+            label="Account"
+            description="Personal information"
+            Icon={Icons.user}
+          />
+          <CustomTagsTrigger
+            activeTab={activeTab}
+            value="settings"
+            label="Settings"
+            description="Change Password, 2FA"
+            Icon={Icons.settings}
+          />
         </TabsList>
         <TabsContent
           value="account"
@@ -176,15 +129,17 @@ function UserProfile() {
               </p>
             </div>
             <div className="flex items-center mt-2 py-2 border-b">
-              <div className="relative w-24 h-24">
-                <Image
-                  src="https://github.com/shadcn.png"
-                  width={100}
-                  height={100}
-                  alt="user profile image"
-                  className="overflow-hidden rounded-full"
-                />
-                <span className="grid place-items-center absolute bg-blue-500 rounded-full w-6 h-6 bottom-0 right-0">
+              <div className="relative">
+                <Avatar className="flex-none w-24 h-24">
+                  <AvatarImage
+                    src={session?.user?.image || undefined}
+                    alt="User profile image"
+                  />
+                  <AvatarFallback className="capitalize font-bold text-muted-foreground text-2xl">
+                    {generateFallbackString(session?.user?.name || "U")}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="grid place-items-center absolute bg-blue-500 rounded-full w-6 h-6 bottom-1 right-1">
                   <Icons.pencil className="w-3 h-3 text-white" />
                 </span>
               </div>
@@ -211,11 +166,41 @@ function UserProfile() {
                     </p>
                   </div>
                   <div className="mt-4 grid md:grid-cols-2 gap-2">
-                    {customFormField(form, "username", "Username")}
-                    {customFormField(form, "company", "Company")}
-                    {customFormField(form, "firstName", "First Name")}
-                    {customFormField(form, "lastName", "Last Name")}
-                    {customFormField(form, "designation", "Designation")}
+                    <FormInput
+                      id="profile-username"
+                      form={form}
+                      name="username"
+                      label="Username"
+                      placeholder="jane@smith"
+                    />
+                    <FormInput
+                      id="profile-company"
+                      form={form}
+                      name="company"
+                      label="Company"
+                      placeholder=""
+                    />
+                    <FormInput
+                      id="profile-first-name"
+                      form={form}
+                      name="firstName"
+                      label="First Name"
+                      placeholder="Jane"
+                    />
+                    <FormInput
+                      id="profile-last-name"
+                      form={form}
+                      name="lastName"
+                      label="Last Name"
+                      placeholder="Smith"
+                    />
+                    <FormInput
+                      id="profile-designation"
+                      form={form}
+                      name="designation"
+                      label="Designation"
+                      placeholder=""
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col p-2">
@@ -229,11 +214,41 @@ function UserProfile() {
                     </p>
                   </div>
                   <div className="mt-4 grid md:grid-cols-2 gap-2">
-                    {customFormField(form, "address", "Address")}
-                    {customFormField(form, "city", "City")}
-                    {customFormField(form, "country", "Country")}
-                    {customFormField(form, "state", "State/Province")}
-                    {customFormField(form, "zip", "Zip")}
+                    <FormInput
+                      id="profile-address"
+                      form={form}
+                      name="address"
+                      label="Address"
+                      placeholder=""
+                    />
+                    <FormInput
+                      id="profile-city"
+                      form={form}
+                      name="city"
+                      label="City"
+                      placeholder=""
+                    />
+                    <FormInput
+                      id="profile-country"
+                      form={form}
+                      name="country"
+                      label="Country"
+                      placeholder=""
+                    />
+                    <FormInput
+                      id="profile-state"
+                      form={form}
+                      name="state"
+                      label="State"
+                      placeholder=""
+                    />
+                    <FormInput
+                      id="profile-zip"
+                      form={form}
+                      name="zip"
+                      label="Zip"
+                      placeholder=""
+                    />
                   </div>
                 </div>
                 <div className="flex gap-2 items-center ml-2">

@@ -10,9 +10,7 @@ function Topbar() {
   const dispatch = useDispatch();
 
   function handleSidebarOpen() {
-    if (!sidebar.open) {
-      dispatch(applicationSlice.actions.toggleSidebar(true));
-    }
+    dispatch(applicationSlice.actions.toggleSidebar(!sidebar.open));
   }
 
   return (

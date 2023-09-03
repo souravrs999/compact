@@ -10,15 +10,14 @@ import { cn } from "@/lib/utils";
 import { applicationSlice } from "@/lib/redux/slices/applicationSlice";
 import SidebarMenuItem from "../SidebarMenu";
 import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { ScrollArea } from "../ui/scroll-area";
+import { useSession } from "next-auth/react";
+import { generateFallbackString } from "@/utils/strings";
 
 function Sidebar() {
   const { sidebar } = useSelector((state) => state.application);
+  const { data: session, status } = useSession();
   const [activeClient, setActiveClient] = useState<string>("nix");
   const dispatch = useDispatch();
 
@@ -47,13 +46,13 @@ function Sidebar() {
           <Icons.chevronLeft className="w-4 h-4" />
         </span>
       </div>
-      <div className="overflow-y-auto overflow-x-hidden flex-grow">
+      <ScrollArea className="h-full flex-grow">
         <ul className="flex flex-col py-4 space-y-1">
           {menuList?.map((menu) => (
             <SidebarMenuItem key={menu.id} menu={menu} />
           ))}
         </ul>
-      </div>
+      </ScrollArea>
       <div className="flex items-center justify-between h-16 p-2 border-t">
         <Select
           onValueChange={(client: string) => setActiveClient(client)}
@@ -89,13 +88,18 @@ function Sidebar() {
         <div className="flex items-center">
           <div className="relative">
             <Avatar className="flex-none w-10 h-10">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@user" />
-              <AvatarFallback>JS</AvatarFallback>
+              <AvatarImage
+                src={session?.user?.image || undefined}
+                alt="User profile image"
+              />
+              <AvatarFallback className="capitalize font-bold text-muted-foreground">
+                {generateFallbackString(session?.user?.name || "U")}
+              </AvatarFallback>
             </Avatar>
             <span className="absolute w-2 h-2 bg-green-500 rounded-full top-0 right-0 ring-2 ring-background" />
           </div>
           <div className="flex flex-shrink-0 flex-col ml-3">
-            <p className="text-sm font-bold">Jane Smith</p>
+            <p className="text-sm font-bold">{session?.user?.name}</p>
             <p className="text-xs text-gray-500">Therapist</p>
           </div>
         </div>

@@ -29,6 +29,7 @@ import {
   EyeOff,
   KeyRound,
   Send,
+  MoveLeft,
 } from "lucide-react";
 
 export const Icons = {
@@ -61,6 +62,7 @@ export const Icons = {
   eyeClose: EyeOff,
   keyRound: KeyRound,
   send: Send,
+  arrowMoveLeft: MoveLeft,
   google: ({ ...props }: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
