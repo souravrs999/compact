@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  // this is a temporary workaround to prevent
+  // react-big-calendar's styling from overriding
+  // our custom styles
+  important: true,
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",

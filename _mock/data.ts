@@ -1,0 +1,67 @@
+export const _mockScheduler = [
+  {
+    id: 1,
+    color: "green",
+    title: "Team Meeting",
+    start: "2023-09-10T09:00:00",
+    end: "2023-09-10T10:00:00",
+  },
+  {
+    id: 2,
+    title: "Project Deadline",
+    start: "2023-09-12T14:00:00",
+    end: "2023-09-12T17:00:00",
+  },
+  {
+    id: 3,
+    title: "Conference Call",
+    start: "2023-09-14T11:30:00",
+    end: "2023-09-14T12:30:00",
+  },
+  {
+    id: 4,
+    title: "Lunch with Colleagues",
+    start: "2023-09-16T12:00:00",
+    end: "2023-09-16T13:00:00",
+  },
+  {
+    id: 5,
+    color: "orange",
+    title: "Training Session",
+    start: "2023-09-18T15:00:00",
+    end: "2023-09-18T17:00:00",
+  },
+  {
+    id: 6,
+    color: "orange",
+    title: "Product Launch",
+    start: "2023-09-20T10:30:00",
+    end: "2023-09-20T12:30:00",
+  },
+  {
+    id: 7,
+    color: "green",
+    title: "Board Meeting",
+    start: "2023-09-22T14:00:00",
+    end: "2023-09-22T16:00:00",
+  },
+  {
+    id: 8,
+    title: "Client Presentation",
+    start: "2023-09-24T13:30:00",
+    end: "2023-09-24T15:00:00",
+  },
+  {
+    id: 9,
+    title: "Workshop on Innovation",
+    start: "2023-09-26T09:30:00",
+    end: "2023-09-26T12:00:00",
+  },
+  {
+    id: 10,
+    color: "red",
+    title: "Company Retreat",
+    start: "2023-09-28T08:00:00",
+    end: "2023-09-30T17:00:00",
+  },
+];

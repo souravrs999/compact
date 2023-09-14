@@ -24,7 +24,7 @@ function Sidebar() {
   return (
     <div
       className={cn(
-        "flex flex-col w-0 top-0 left-0 bg-background h-full border-r text-foreground overflow-hidden transition-all duration-100 ease-in-out shadow-lg",
+        "flex flex-col w-0 top-0 left-0 bg-background h-full border-r text-foreground overflow-hidden transition-all duration-100 ease-in-out shadow-lg shrink-0",
         {
           "w-64": sidebar.open,
         }
