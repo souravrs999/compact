@@ -8,18 +8,21 @@ export const _mockScheduler = [
   },
   {
     id: 2,
+    color: "blue",
     title: "Project Deadline",
     start: "2023-09-12T14:00:00",
     end: "2023-09-12T17:00:00",
   },
   {
     id: 3,
+    color: "yellow",
     title: "Conference Call",
     start: "2023-09-14T11:30:00",
     end: "2023-09-14T12:30:00",
   },
   {
     id: 4,
+    color: "purple",
     title: "Lunch with Colleagues",
     start: "2023-09-16T12:00:00",
     end: "2023-09-16T13:00:00",

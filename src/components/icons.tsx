@@ -32,6 +32,16 @@ import {
   MoveLeft,
   Clock,
   Link2,
+  BadgeCheck,
+  Check,
+  Info,
+  FileBox,
+  MessageSquare,
+  Phone,
+  Boxes,
+  Plus,
+  MapPin,
+  Text,
 } from "lucide-react";
 
 export const Icons = {
@@ -67,6 +77,16 @@ export const Icons = {
   arrowMoveLeft: MoveLeft,
   clock: Clock,
   chain: Link2,
+  badgeCheck: BadgeCheck,
+  check: Check,
+  info: Info,
+  fileBox: FileBox,
+  messageSquare: MessageSquare,
+  phone: Phone,
+  boxes: Boxes,
+  plus: Plus,
+  mapPin: MapPin,
+  text: Text,
   google: ({ ...props }: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
