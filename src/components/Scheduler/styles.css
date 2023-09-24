@@ -1,6 +1,14 @@
 .rbc-calendar .rbc-event {
-  height: 52px;
   background: transparent;
+}
+.rbc-calendar .rbc-time-view {
+  border-color: hsl(var(--border));
+}
+.rbc-calendar .rbc-month-view .rbc-event {
+  height: 3.3rem;
+}
+.rbc-calendar .rbc-time-view .rbc-event {
+  border: none;
 }
 .rbc-calendar .rbc-addons-dnd-resize-ew-anchor {
   top: 40%;
@@ -25,6 +33,50 @@
   background: transparent;
   color: hsl(var(--primary));
 }
-.rbc-calendar .rbc-selected-cell {
+.rbc-calendar .rbc-month-view .rbc-today {
+  background: hsl(var(--primary));
+  opacity: 0.1;
+}
+.rbc-calendar .rbc-time-view .rbc-today {
+  background: hsl(var(--background));
+}
+.rbc-calendar .rbc-time-view .rbc-time-column .rbc-timeslot-group {
+  border-bottom: 1px solid hsl(var(--border));
+  border-left: 1px solid hsl(var(--border));
+}
+.rbc-calendar .rbc-event-label {
+  display: none;
+}
+.rbc-current-time-indicator {
+  height: 0.1rem;
+  background: hsl(var(--primary));
+}
+.rbc-current-time-indicator::before {
+  left: -0.1rem;
+  top: -0.25rem;
+  content: "";
+  height: 0.6rem;
+  width: 0.6rem;
+  border-radius: 100%;
+  position: absolute;
+  background-color: inherit;
+}
+.rbc-calendar .rbc-day-slot .rbc-time-slot {
+  border: none;
+}
+.rbc-calendar .rbc-time-header.rbc-overflowing {
+  border-color: hsl(var(--border));
+}
+.rbc-calendar .rbc-time-header-content {
+  border-color: hsl(var(--border));
+}
+.rbc-calendar .rbc-time-content {
+  border-top: 2px solid hsl(var(--border));
+}
+.rbc-calendar .rbc-selected-cell,
+.rbc-slot-selection {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  background-color: hsl(var(--background));
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23cccccc' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
 }

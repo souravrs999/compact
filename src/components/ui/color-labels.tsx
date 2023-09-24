@@ -36,7 +36,7 @@ function ColorPicker({ value, onChange }: TColorPicker) {
         <span
           key={c.name}
           className={cn(
-            "w-4 h-4 rounded-full ring-background ring-2 ring-offset-1",
+            "w-4 h-4 rounded-full ring-background ring-offset-background ring-2 ring-offset-1",
             {
               " ring-red-500": c.name === color && color === "red",
               " ring-orange-500": c.name === color && color === "orange",

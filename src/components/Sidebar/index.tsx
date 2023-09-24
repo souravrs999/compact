@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSession } from "next-auth/react";
 import { generateFallbackString } from "@/utils/strings";
+import { AspectRatio } from "../ui/aspect-ratio";
 
 function Sidebar() {
   const { sidebar } = useSelector((state) => state.application);
@@ -31,12 +32,11 @@ function Sidebar() {
       )}
     >
       <div className="flex shrink-0 items-center p-2 h-16 border-b justify-between">
-        <Image
-          width={120}
-          height={50}
-          src="/assets/images/logo.svg"
-          alt="logo"
-        />
+        <div className="w-[7.5rem]">
+          <AspectRatio ratio={80 / 23}>
+            <Image priority fill src="/assets/images/logo.svg" alt="logo" />
+          </AspectRatio>
+        </div>
         <span
           onClick={() =>
             dispatch(applicationSlice.actions.toggleSidebar(false))
@@ -60,12 +60,15 @@ function Sidebar() {
         >
           <SelectTrigger className="focus:ring-0 border-none rounded-none">
             <div className="flex items-center justify-between">
-              <Image
-                width={30}
-                height={30}
-                src={`/assets/images/${activeClient}.svg`}
-                alt="client"
-              />
+              <div className="w-[1.8rem]">
+                <AspectRatio ratio={13 / 11}>
+                  <Image
+                    fill
+                    src={`/assets/images/${activeClient}.svg`}
+                    alt="client"
+                  />
+                </AspectRatio>
+              </div>
               <p className="text-base font-bold ml-5 text-foreground tracking-wider capitalize">
                 {activeClient}
               </p>

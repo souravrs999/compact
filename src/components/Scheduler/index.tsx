@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import {
   TEvent,
@@ -11,6 +11,7 @@ import {
   Views,
   dayjsLocalizer,
   SlotInfo,
+  ToolbarProps,
 } from "react-big-calendar";
 import withDragAndDrop, {
   EventInteractionArgs,
@@ -41,19 +42,24 @@ import {
 import EventCreationDialog from "../EventCreationDialog";
 import { z } from "zod";
 import { eventCreationSchema } from "@/lib/validations/schedule";
+import { DatePicker } from "../ui/date-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Button } from "../ui/button";
 
 const localizer = dayjsLocalizer(dayjs);
 const DNDCalendar = withDragAndDrop(RBC);
 
-const CDayPropGetter = (date: Date) => {
-  return {
-    className: cn("bg-background", {
-      "bg-primary/10": dateLib().isSame(date, "day"),
-    }),
-  };
-};
+type CToolbarType = {
+  onChange: (date: Date) => void;
+} & ToolbarProps;
 
-const CEventPropGetter: EventPropGetter<TEvent> = (event) => {
+const CEventPropGetter: EventPropGetter<TEvent> = (_event) => {
   return {
     className: "p-0 m-0 text-foreground rounded-none font-bold text-sm",
   };
@@ -64,7 +70,7 @@ const CEvent: FC<EventProps<TEvent>> = ({ event }) => {
   return (
     <div
       className={cn(
-        "flex-1 bg-primary/30 border-l-4 border-primary py-1 px-2",
+        "flex-1 bg-primary/30 border-l-4 border-primary py-1 px-2 h-full",
         {
           "bg-red-500/30 border-red-500": event?.color === "red",
           "bg-orange-500/30 border-orange-500": event?.color === "orange",
@@ -107,8 +113,53 @@ const CEvent: FC<EventProps<TEvent>> = ({ event }) => {
   );
 };
 
+const CToolbar: FC<CToolbarType> = (props) => {
+  return (
+    <div className="flex items-center justify-between mt-1 mb-2">
+      <div className="flex items-center space-x-2">
+        <DatePicker
+          value={props?.date}
+          onChange={props.onChange}
+          className="font-bold w-[10rem] border-0"
+        />
+        <Button variant="outline" onClick={() => props.onChange(new Date())}>
+          Today
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="border-0"
+          onClick={() => props?.onNavigate("PREV")}
+        >
+          <Icons.chevronLeft className="text-muted-foreground" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="border-0"
+          onClick={() => props?.onNavigate("NEXT")}
+        >
+          <Icons.chevronRight className="text-muted-foreground" />
+        </Button>
+      </div>
+      <Select value={props.view} onValueChange={(e) => props.onView(e as View)}>
+        <SelectTrigger className="w-[8rem]">
+          <SelectValue placeholder="Month" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="day">Day</SelectItem>
+          <SelectItem value="week">Week</SelectItem>
+          <SelectItem value="month">Month</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
 function Scheduler() {
-  const [view, setView] = useState<View>("month");
+  const clickRef = useRef<number | null>(null);
+  const [date, setDate] = useState<Date>(new Date());
+  const [view, setView] = useState<View>("day");
   const [selectedSlots, setSelectedSlots] = useState<SlotInfo | null>();
   const [events, setEvents] = useState<Event[]>(
     _mockScheduler.map((e) => ({
@@ -150,7 +201,11 @@ function Scheduler() {
   );
 
   const handleSlotSelection = useCallback((slotInfo: SlotInfo) => {
-    setSelectedSlots(slotInfo);
+    window.clearTimeout(clickRef?.current || undefined);
+
+    clickRef.current = window.setTimeout(() => {
+      setSelectedSlots(slotInfo);
+    }, 250);
   }, []);
 
   const handleSlotSelectionDiscard = () => setSelectedSlots(null);
@@ -160,12 +215,21 @@ function Scheduler() {
     setEvents([...events, event]);
   };
 
+  const handleDateChange = (date: Date) => {
+    setDate(date);
+  };
+
+  useEffect(() => {
+    return () => window.clearTimeout(clickRef?.current || undefined);
+  }, []);
+
   return (
     <>
       <DNDCalendar
         selectable
         resizable
         popup={false}
+        date={date}
         localizer={localizer}
         className="h-full rbc__scheduler"
         events={events}
@@ -175,12 +239,13 @@ function Scheduler() {
         onEventDrop={handleEventEdit}
         onEventResize={handleEventEdit}
         eventPropGetter={CEventPropGetter}
-        dayPropGetter={CDayPropGetter}
         onSelectSlot={handleSlotSelection}
+        onNavigate={(newDate) => setDate(newDate)}
         components={{
-          month: {
-            event: CEvent,
-          },
+          toolbar: (props) => (
+            <CToolbar {...props} onChange={handleDateChange} />
+          ),
+          event: CEvent,
         }}
       />
       <Dialog

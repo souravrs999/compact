@@ -21,12 +21,9 @@ type TDatePicker = {
 };
 
 export function DatePicker({ value, label, onChange, className }: TDatePicker) {
-  const [date, setDate] = React.useState<Date | undefined>(value);
-
   const handleChange = (date: Date | undefined) => {
     if (date) {
       onChange(date);
-      setDate(date);
     }
   };
 
@@ -37,13 +34,13 @@ export function DatePicker({ value, label, onChange, className }: TDatePicker) {
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            !value && "text-muted-foreground",
             className
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            dateLib(date).format("MMM DD, YYYY")
+          {value ? (
+            dateLib(value).format("MMM DD, YYYY")
           ) : (
             <span>{label || "Pick a date"}</span>
           )}
@@ -52,7 +49,7 @@ export function DatePicker({ value, label, onChange, className }: TDatePicker) {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={date}
+          selected={value}
           onSelect={handleChange}
           initialFocus
         />
