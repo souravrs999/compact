@@ -30,7 +30,7 @@ function Sidebar() {
         }
       )}
     >
-      <div className="flex items-center p-2 h-16 border-b justify-between">
+      <div className="flex shrink-0 items-center p-2 h-16 border-b justify-between">
         <Image
           width={120}
           height={50}
@@ -53,7 +53,7 @@ function Sidebar() {
           ))}
         </ul>
       </ScrollArea>
-      <div className="flex items-center justify-between h-16 p-2 border-t">
+      <div className="flex shrink-0 items-center justify-between h-16 p-2 border-t">
         <Select
           onValueChange={(client: string) => setActiveClient(client)}
           defaultValue={activeClient}
@@ -84,7 +84,7 @@ function Sidebar() {
           </SelectContent>
         </Select>
       </div>
-      <div className="h-16 flex items-center justify-between p-2 border-t">
+      <div className="h-16 shrink-0 flex items-center justify-between p-2 border-t">
         <div className="flex items-center">
           <div className="relative">
             <Avatar className="flex-none w-10 h-10">

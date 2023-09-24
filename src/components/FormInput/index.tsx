@@ -1,6 +1,12 @@
 import React, { ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
@@ -34,9 +40,7 @@ function FormInput(props: InputProps) {
       name={name}
       render={({ field }) => (
         <FormItem className={cn("relative", className)}>
-          <FormLabel htmlFor={id} className="text-xs text-muted-foreground">
-            {label}
-          </FormLabel>
+          <FormLabel>{label}</FormLabel>
           {startAdornment && (
             <div className="absolute top-6 h-8 w-8 border-r grid place-items-center">
               <span>{startAdornment}</span>
@@ -48,7 +52,7 @@ function FormInput(props: InputProps) {
               {...rest}
               {...field}
               className={cn(
-                "h-8 focus-visible:ring-offset-0 font-semibold rounded",
+                "focus-visible:ring-offset-0 font-semibold rounded",
                 {
                   "pl-10": startAdornment,
                   "pr-10": endAdornment,
@@ -59,6 +63,7 @@ function FormInput(props: InputProps) {
           {endAdornment && (
             <span className="absolute top-1/2 right-2">{endAdornment}</span>
           )}
+          <FormMessage className="text-xs" />
         </FormItem>
       )}
     />

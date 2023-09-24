@@ -3,12 +3,14 @@
 import React, { FC, useCallback, useState } from "react";
 import dayjs from "dayjs";
 import {
+  TEvent,
   Event,
   EventPropGetter,
   EventProps,
   View,
   Views,
   dayjsLocalizer,
+  SlotInfo,
 } from "react-big-calendar";
 import withDragAndDrop, {
   EventInteractionArgs,
@@ -29,9 +31,16 @@ import {
   HoverCardPortal,
   HoverCardTrigger,
 } from "../ui/hover-card";
-import Chip from "../ui/chip";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
+import Popover from "./Popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+} from "../ui/dialog";
+import EventCreationDialog from "../EventCreationDialog";
+import { z } from "zod";
+import { eventCreationSchema } from "@/lib/validations/schedule";
 
 const localizer = dayjsLocalizer(dayjs);
 const DNDCalendar = withDragAndDrop(RBC);
@@ -44,13 +53,13 @@ const CDayPropGetter = (date: Date) => {
   };
 };
 
-const CEventPropGetter: EventPropGetter<Event> = (event) => {
+const CEventPropGetter: EventPropGetter<TEvent> = (event) => {
   return {
     className: "p-0 m-0 text-foreground rounded-none font-bold text-sm",
   };
 };
 
-const CEvent: FC<EventProps<Event>> = ({ event }) => {
+const CEvent: FC<EventProps<TEvent>> = ({ event }) => {
   const pastEvent: boolean = dateLib(event?.end).diff(dateLib()) < 0;
   return (
     <div
@@ -68,7 +77,7 @@ const CEvent: FC<EventProps<Event>> = ({ event }) => {
         }
       )}
     >
-      <HoverCard openDelay={100}>
+      <HoverCard>
         <HoverCardTrigger asChild>
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
@@ -84,82 +93,13 @@ const CEvent: FC<EventProps<Event>> = ({ event }) => {
           </div>
         </HoverCardTrigger>
         <HoverCardPortal>
-          <HoverCardContent className="p-0 w-[24rem] rounded">
-            <div className="flex items-center p-2 gap-2 border-b-[1px]">
-              <p className="font-semibold">{event?.title}</p>
-              {pastEvent && (
-                <Icons.badgeCheck className="shrink-0 w-4 h-4 fill-green-500 text-white" />
-              )}
-            </div>
-            <div className="flex flex-col p-2 space-y-3 w-full bg-background">
-              <div className="flex rounded items-center gap-2 border p-1 text-blue-500 bg-blue-500/10">
-                <Icons.info className="shrink-0 w-4 h-4" />
-                <p className="text-xs">
-                  Remember to check recurrence or repeat in calendar invitation
-                </p>
-                <Icons.close className="shrink-0 w-4 h-4 text-muted-foreground" />
-              </div>
-              <div className="flex flex-col space-y-2 border-b pb-1">
-                <p className="font-semibold text-sm text-muted-foreground">
-                  Tags
-                </p>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Chip variant="primary" label="Project Meeting">
-                    <Icons.fileBox className="w-3 h-3" />
-                  </Chip>
-                  <Chip variant="success" label="Meeting">
-                    <Icons.messageSquare className="w-3 h-3" />
-                  </Chip>
-                  <Chip variant="warning" label="Call">
-                    <Icons.phone className="w-3 h-3" />
-                  </Chip>
-                  <Chip variant="danger" label="Other">
-                    <Icons.boxes className="w-3 h-3" />
-                  </Chip>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Icons.clock className="w-5 h-5 text-background fill-muted-foreground/50" />
-                <div className="flex flex-col">
-                  <p className="text-sm font-semibold">
-                    {dateLib(event.start).format("hh:mm a")} -{" "}
-                    {dateLib(event?.end).format("hh:mm a")}
-                  </p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span className="p-1 border-dashed border-2 border-muted-foreground/40 rounded-full">
-                      <Icons.plus className="w-5 h-5 text-muted-foreground/40" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Icons.mapPin className="w-5 h-5 text-background fill-muted-foreground/50" />
-                <p className="font-semibold text-muted-foreground text-sm">
-                  Add location
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <Icons.text className="w-5 h-5 text-muted-foreground/50" />
-                <p className="font-semibold text-muted-foreground text-sm">
-                  Add description
-                </p>
-              </div>
-              <div className="flex items-center gap-1">
-                <Button variant="outline" className="w-full h-8">
-                  {`${pastEvent ? "Reschedule" : "Cancel"} Event`}
-                </Button>
-                <Button variant="default" className="w-full h-8">
-                  {`${pastEvent ? "Delete" : "Update"} Event`}
-                </Button>
-              </div>
-            </div>
+          <HoverCardContent className="p-0 w-[20rem] rounded">
+            <Popover
+              title={event?.title}
+              pastEvent={pastEvent}
+              start={dateLib(event.start).format("hh:mm a")}
+              end={dateLib(event?.end).format("hh:mm a")}
+            />
           </HoverCardContent>
         </HoverCardPortal>
       </HoverCard>
@@ -169,6 +109,7 @@ const CEvent: FC<EventProps<Event>> = ({ event }) => {
 
 function Scheduler() {
   const [view, setView] = useState<View>("month");
+  const [selectedSlots, setSelectedSlots] = useState<SlotInfo | null>();
   const [events, setEvents] = useState<Event[]>(
     _mockScheduler.map((e) => ({
       ...e,
@@ -177,8 +118,8 @@ function Scheduler() {
     }))
   );
 
-  const handleEventEdit = useCallback((data: EventInteractionArgs<Event>) => {
-    setEvents((prevEvents) => {
+  const handleEventEdit = useCallback((data: EventInteractionArgs<TEvent>) => {
+    setEvents((prevEvents: TEvent[]) => {
       const {
         start,
         end,
@@ -208,9 +149,21 @@ function Scheduler() {
     [setView]
   );
 
+  const handleSlotSelection = useCallback((slotInfo: SlotInfo) => {
+    setSelectedSlots(slotInfo);
+  }, []);
+
+  const handleSlotSelectionDiscard = () => setSelectedSlots(null);
+
+  const handleEventCreation = (data: z.infer<typeof eventCreationSchema>) => {
+    const event = { ...data, title: data.name };
+    setEvents([...events, event]);
+  };
+
   return (
     <>
       <DNDCalendar
+        selectable
         resizable
         popup={false}
         localizer={localizer}
@@ -223,12 +176,33 @@ function Scheduler() {
         onEventResize={handleEventEdit}
         eventPropGetter={CEventPropGetter}
         dayPropGetter={CDayPropGetter}
+        onSelectSlot={handleSlotSelection}
         components={{
           month: {
             event: CEvent,
           },
         }}
       />
+      <Dialog
+        open={Boolean(selectedSlots)}
+        onOpenChange={handleSlotSelectionDiscard}
+      >
+        <DialogContent className="w-full max-w-[24rem]">
+          <DialogHeader className="font-bold">Add Event</DialogHeader>
+          <DialogDescription>
+            <div className="flex flex-col space-y-2">
+              <p className="">
+                Add a new event for the time slots selected from the calendar
+              </p>
+              <EventCreationDialog
+                onCreate={handleEventCreation}
+                slot={selectedSlots || undefined}
+                onClose={handleSlotSelectionDiscard}
+              />
+            </div>
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
