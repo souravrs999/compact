@@ -21,7 +21,7 @@ function DateTimePicker(props: Props) {
         <Button
           variant="outline"
           className={cn(
-            "w-[200px] justify-start text-left font-normal h-8",
+            "w-[12.5rem] justify-start text-left font-normal h-8",
             !date && "text-muted-foreground"
           )}
         >

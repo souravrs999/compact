@@ -7,7 +7,8 @@
 .rbc-calendar .rbc-month-view .rbc-event {
   height: 3.3rem;
 }
-.rbc-calendar .rbc-time-view .rbc-event {
+.rbc-calendar .rbc-day-slot .rbc-time-slot,
+.rbc-time-view .rbc-event {
   border: none;
 }
 .rbc-calendar .rbc-addons-dnd-resize-ew-anchor {
@@ -61,13 +62,8 @@
   position: absolute;
   background-color: inherit;
 }
-.rbc-calendar .rbc-day-slot .rbc-time-slot {
-  border: none;
-}
-.rbc-calendar .rbc-time-header.rbc-overflowing {
-  border-color: hsl(var(--border));
-}
-.rbc-calendar .rbc-time-header-content {
+.rbc-calendar .rbc-time-header.rbc-overflowing,
+.rbc-time-header-content {
   border-color: hsl(var(--border));
 }
 .rbc-calendar .rbc-time-content {

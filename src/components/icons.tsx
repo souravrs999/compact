@@ -42,6 +42,10 @@ import {
   Plus,
   MapPin,
   Text,
+  Bell,
+  MonitorSmartphone,
+  Smartphone,
+  Tablet,
 } from "lucide-react";
 
 export const Icons = {
@@ -87,6 +91,10 @@ export const Icons = {
   plus: Plus,
   mapPin: MapPin,
   text: Text,
+  bell: Bell,
+  monitorSmartphone: MonitorSmartphone,
+  smartphone: Smartphone,
+  tablet: Tablet,
   google: ({ ...props }: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -159,7 +159,7 @@ const CToolbar: FC<CToolbarType> = (props) => {
 function Scheduler() {
   const clickRef = useRef<number | null>(null);
   const [date, setDate] = useState<Date>(new Date());
-  const [view, setView] = useState<View>("day");
+  const [view, setView] = useState<View>("month");
   const [selectedSlots, setSelectedSlots] = useState<SlotInfo | null>();
   const [events, setEvents] = useState<Event[]>(
     _mockScheduler.map((e) => ({

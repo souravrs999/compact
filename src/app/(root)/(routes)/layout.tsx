@@ -18,7 +18,7 @@ export default function RootLayout({
       <Sidebar />
       <div className="flex flex-col flex-1">
         <Topbar />
-        <ScrollArea className="flex-1 bg-muted p-1">{children}</ScrollArea>
+        <ScrollArea className="h-full bg-muted p-1">{children}</ScrollArea>
       </div>
     </div>
   );
